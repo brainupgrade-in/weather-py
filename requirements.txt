@@ -1,3 +1,4 @@
 Flask
 requests==2.27.1
 gunicorn
+pymongo==3.12.0

@@ -16,5 +16,5 @@ ENV ENVIRONMENT uat
 
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
 
-# docker build -t brainupgrade/configmap:2 .
-# docker run -p 8000:8000 brainupgrade/configmap:2
+# docker build -t brainupgrade/weather-py:3 .
+# docker run -p 8000:8000 brainupgrade/weather-py:3
