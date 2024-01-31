@@ -1,34 +1,51 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: weather-py
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: weather-py
-  template:
-    metadata:
-      labels:
-        app: weather-py
-    spec:
-      containers:
-      - name: weather-py
-        image: brainupgrade/weather-py
-        ports:
-        - containerPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: weather-py-service
-spec:
-  type: NodePort
-  selector:
-    app: weather-py
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
-      # NodePort field is optional. If not specified, Kubernetes will allocate a port automatically.
-      # nodePort: 30007
+name: CI-CD Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Set up Docker Buildx
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    # Login to DockerHub
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    # Build and push Docker image
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: brainupgrade/weather-py:latest
+
+    # Set up Kubernetes in Docker (KIND)
+    - name: Create KIND Cluster
+      uses: helm/kind-action@v1.2.0
+
+    # Deploy to KIND Cluster
+    - name: Deploy to KIND
+      run: |
+        kubectl apply -f deployment.yaml
+
+    # Test the deployment
+    - name: Test
+      run: |
+        kubectl wait --for=condition=Ready pod -l app=weather-py --timeout=300s
+        # Add commands to test the application
+        # For instance, using curl to check if the app responds correctly
+        NODE_PORT=$(kubectl get svc weather-py-service -o=jsonpath='{.spec.ports[0].nodePort}')
+        NODE_IP=$(kubectl get nodes -o=jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+        curl -s $NODE_IP:$NODE_PORT/place/Bangalore 
