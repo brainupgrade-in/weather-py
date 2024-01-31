@@ -19,9 +19,6 @@ jobs:
     - name: Build Docker image
       run: docker build -t test1:v2.0.1 .
 
-    - name: Push Docker image
-      run: docker push test1:v2.0.1
-
   deploy:
     runs-on: ubuntu-latest
 
@@ -35,8 +32,8 @@ jobs:
       uses: azure/k8s-set-context@v1
       with:
         method: kubeconfig
-        kubeconfig: .github\workflows\kubeconfig.yaml
+        kubeconfig: ${{ secrets.KUBECONFIG }}
 
     - name: Deploy to Kubernetes
-      run: |
-        kubectl apply -f path/to/your/kubernetes/manifests || { echo "Failed to apply manifests"; kubectl describe pods; kubectl get events --sort-by=.metadata.creationTimestamp; exit 1; }
+      run: kubectl apply -f path/to/your/kubernetes/manifests
+
