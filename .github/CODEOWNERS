@@ -2,7 +2,7 @@
 # Example of a `CODEOWNERS` file
 
 # These people are the default owners for everything in the repo.
-*       @brainupgrade-in
+*       @brainupgrade-in @rajeshgheware
 
 # Order is important. The last matching pattern takes the most precedence.
 # This means @doc-owner will be requested for review when changes are
