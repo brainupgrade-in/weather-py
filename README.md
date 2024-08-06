@@ -25,6 +25,13 @@ curl http://localhost:port/place/Bangalore
 ```
 Replace `localhost:port` with your server's address and port number.
 
+### Run & Test on Codespaces
+```
+export API_URL_GEOCODING=https://geocoding-api.open-meteo.com/v1
+export API_URL_WEATHER=https://api.open-meteo.com/v1
+flask run
+```
+
 ## Deployment
 
 The microservice is container-ready and can be deployed using Docker.
