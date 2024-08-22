@@ -1,10 +1,10 @@
 name: CI-CD Workflow - Docker build, push, deploy to KIND, and test
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
   workflow_dispatch:  
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: brainupgrade/weather-py:latest
+        tags: gunasekar2019/weather-py:latest
 
     # Set up Kubernetes in Docker (KIND)
     - name: Create KIND Cluster
@@ -49,4 +49,4 @@ jobs:
         # For instance, using curl to check if the app responds correctly
         NODE_PORT=$(kubectl get svc weather-py-service -o=jsonpath='{.spec.ports[0].nodePort}')
         NODE_IP=$(kubectl get nodes -o=jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
-        curl -s $NODE_IP:$NODE_PORT/place/Bangalore 
+        curl -s $NODE_IP:$NODE_PORT/place/Chennai 
