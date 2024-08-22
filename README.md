@@ -1,6 +1,7 @@
 # Weather-Py
 
-
+updated by Jojo ;
+new change
 ## Description
 Weather-Py is a Python microservice designed to provide temperature information for a given place. This microservice utilizes a weather API to fetch and serve the relevant data.
 
