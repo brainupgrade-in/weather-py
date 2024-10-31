@@ -32,3 +32,4 @@ spec:
       targetPort: 8080
       # NodePort field is optional. If not specified, Kubernetes will allocate a port automatically.
       # nodePort: 30007
+      #testinf
