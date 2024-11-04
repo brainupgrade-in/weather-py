@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    exclude:
+      - '*'  # Prevent regular push triggers
+
+pr:
+  branches:
+    exclude:
+      - '*'  # Don't Trigger on pull requests either
+
+resources:
+- repo: self
+
+pool:
+  name: selfhosted
+
+variables:
+  tag: '$(Build.BuildId)'
+  dockerImageAuthor: 'brainupgrade'
+  dockerImageName: '$(Build.Repository.Name)'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        repository: '$(dockerImageAuthor)/$(dockerImageName)'
+        tags: '$(tag),latest'
